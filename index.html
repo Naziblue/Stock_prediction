@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple Stock Price Prediction</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #d1d2d6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 10px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5em;
+            color: white;
+        }
+
+        header nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .section {
+            background-color: rgba(30, 30, 47, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            width: 48%;
+        }
+
+        .guide {
+            margin-right: 10px;
+        }
+
+        .section h3, .section h2 {
+            color: #fff;
+        }
+
+        .section code {
+            background-color: #333;
+            padding: 2px 4px;
+            border-radius: 4px;
+            color: #6dd5ed;
+        }
+
+        canvas {
+            width: 100%;
+        }
+
+        .prediction-section {
+            background-color: #102840;
+            padding: 20px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .prediction-section h2 {
+            margin: 0;
+            color: #d1d2d6;
+            font-size: 1.2em;
+        }
+
+        .prediction-section label {
+            display: block;
+            margin-top: 10px;
+            color: #d1d2d6;
+            font-size: 0.9em;
+        }
+
+        .prediction-section input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            background-color: #3b4b61;
+            color: #d1d2d6;
+            margin-top: 10px;
+        }
+
+        .prediction-section button {
+            width: 40%;
+            padding: 10px;
+            border-radius: 10px;
+            border: none;
+            background-color: rgb(64, 252, 255);
+            color: black;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+            margin-left: 30% ;
+        }
+
+        .prediction-section button:hover {
+            background-color: #e1e1e1;
+        }
+
+        .prediction-section .result {
+            font-size: 2em;
+            color: white;
+            margin-left: 60px;
+        }
+
+        .carousel-container {
+            display: flex;
+            overflow-x: scroll;
+            padding: 10px 0;
+            margin-top: 20px;
+        }
+
+        .carousel-item {
+            background: linear-gradient(135deg, #aa4e39, #70341e);
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            min-width: 150px;
+            margin-right: 10px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .about-section {
+            background-color: #3b4b61;
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            margin-top: 20px;
+            font-size: 1em;
+        }
+
+        .about-section h3 {
+            color: #cfe6fa;
+            font-size: 1.5em;
+        }
+
+        .about-section p {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Apple Stock Price Prediction</h1>
+        <nav>
+            <a href="#about">about</a> | <a href="#">Github</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="section guide">
+            <h3>User Guide</h3>
+            <p>Please enter historical stock prices for Apple, separated by commas. For example:</p>
+            <p><code>100, 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 132, 134, 136, 138</code></p>
+            <p>This data will be used to predict the next closing price of Apple stock.</p>
+        </div>
+        <div class="section">
+            <h2>Apple Stock Price Prediction</h2>
+            <canvas id="historicalChart" width="600" height="200"></canvas>
+        </div>
+    </div>
+
+    <div class="prediction-section">
+        <div class="input-container">
+            <h2>Input Data for Prediction</h2>
+            <label for="data">Enter data for prediction (comma-separated values):</label>
+            <input type="text" id="data" required>
+            <button type="submit" id="predict-button">Predict</button>
+        </div>
+        <div class="result" id="result"></div>
+    </div>
+
+    <div class="carousel-container">
+        <div class="carousel-item">Tesla<br>$206</div>
+        <div class="carousel-item">Apple<br>$188</div>
+        <div class="carousel-item">Google<br>$2723</div>
+        <div class="carousel-item">Amazon<br>$3444</div>
+        <div class="carousel-item">Microsoft<br>$280</div>
+        <div class="carousel-item">Netflix<br>$590</div>
+        <div class="carousel-item">NVIDIA<br>$726</div>
+    </div>
+
+    <div class="about-section" id="about">
+        <h3>About this Project</h3>
+        <p>Lorem ipsum dolor sit amet consectetur. Eget porttitor eleifend sit accumsan nullam varius tempus ullamcorper. Imperdiet bibendum volutpat lacus id et id id nunc. Eget commodo ultrices hendrerit facilisi libero egestas. Diam vitae interdum aenean egestas scelerisque eu mi dui mattis.</p>
+        <p>Lorem ipsum dolor sit amet consectetur. Eget porttitor eleifend sit accumsan nullam varius tempus ullamcorper. Imperdiet bibendum volutpat lacus id et id id nunc. Eget commodo ultrices hendrerit facilisi libero egestas. Diam vitae interdum aenean egestas scelerisque eu mi dui mattis.</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const historicalPrices = [100, 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 132, 134, 136, 138, 140, 142, 144, 146, 148, 150, 152, 154, 156, 158, 160, 162, 164, 166, 168, 170, 172, 174, 176, 178, 180, 182, 184, 186, 188, 190, 192, 194, 196, 198, 200, 202, 204, 206, 208, 210, 212, 214, 216, 218];
+
+        const ctx = document.getElementById('historicalChart').getContext('2d');
+        const historicalChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: historicalPrices.map((_, i) => i + 1),
+                datasets: [{
+                    label: 'Historical Apple Stock Prices',
+                    data: historicalPrices,
+                    borderColor: 'rgba(109, 213, 237, 1)',
+                    backgroundColor: 'rgba(109, 213, 237, 0.2)',
+                    fill: true,
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time (days)',
+                            color: '#d1d2d6'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Stock Price (USD)',
+                            color: '#d1d2d6'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#d1d2d6'
+                        }
+                    }
+                }
+            }
+        });
+
+        document.getElementById('predict-button').addEventListener('click', function() {
+            const data = document.getElementById('data').value.split(',').map(Number);
+
+            fetch('http://127.0.0.1:5000/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ data }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('result').innerHTML = 'Error: ' + data.error;
+                } else {
+                    document.getElementById('result').innerHTML = 'Prediction: $' + data.prediction;
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = 'Error: ' + error;
+            });
+        });
+    </script>
+</body>
+</html>
